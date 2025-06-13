@@ -1,13 +1,11 @@
 from rest_framework import serializers
-from .models import Product
+
+from .models import Category, Product
 
 class ProductSerializer(serializers.ModelSerializer):
-    get_image = serializers.SerializerMethodField()
-    get_thumbnail = serializers.SerializerMethodField()
-
     class Meta:
         model = Product
-        fields = [
+        fields = (
             "id",
             "name",
             "get_absolute_url",
@@ -15,10 +13,16 @@ class ProductSerializer(serializers.ModelSerializer):
             "price",
             "get_image",
             "get_thumbnail"
-        ]
+        )
 
-    def get_get_image(self, obj):
-        return obj.get_image()
+class CategorySerializer(serializers.ModelSerializer):
+    products = ProductSerializer(many=True)
 
-    def get_get_thumbnail(self, obj):
-        return obj.get_thumbnail()
+    class Meta:
+        model = Category
+        fields = (
+            "id",
+            "name",
+            "get_absolute_url",
+            "products",
+        )
